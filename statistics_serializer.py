@@ -249,7 +249,7 @@ def _keep_only_offers_with_stock_and_valid_venues(offers, stocks, valid_venues):
 
 
 def _add_human_category(offers):
-    type_correspondance_path = '../helpers_data/type_correspondance.csv'
+    type_correspondance_path = 'helpers_data/type_correspondance.csv'
     type_correspondance = pd.read_csv(type_correspondance_path, sep=';', encoding='utf-8')
     offers_with_human_category = pd.merge(type_correspondance, offers,
                                           how='inner', left_on='type', right_on='type')
