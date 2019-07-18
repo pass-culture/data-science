@@ -3,3 +3,4 @@ numpy
 sqlalchemy
 pytest
 psycopg2-binary
+unidecode
