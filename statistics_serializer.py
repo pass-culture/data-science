@@ -1,7 +1,7 @@
 # coding: utf-8
 import pandas as pd
 
-from statistics_serializer.repository import get_activation_stock_id
+from repository import get_activation_stock_id
 
 
 def create_beneficiary_users_having_created_an_account_table(connection):
