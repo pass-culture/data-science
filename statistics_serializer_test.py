@@ -1,7 +1,11 @@
+import os
+
 import pandas as pd
 from sqlalchemy import create_engine
 
-from statistics_serializer.statistics_serializer import create_beneficiary_users_having_created_an_account_table, \
+PATH_TO_TEST_OUTPUT = os.environ['PATH_TO_TEST_OUTPUT']
+
+from statistics_serializer import create_beneficiary_users_having_created_an_account_table, \
     create_valid_offerer_table, \
     create_valid_venue_table, create_real_booking_after_ministerial_decree_table, create_stock_table, \
     create_offer_with_stocks_and_valid_venue_table, \
@@ -14,7 +18,7 @@ def test_create_beneficiary_users_having_created_an_account_table():
     # Given
     engine = create_engine('postgres://pass_culture:passq@localhost:5432')
     connection = engine.connect()
-    expected_table = pd.read_csv('/Users/louiseanfray/passculture/csv_from_jupyter/activationxp.csv',
+    expected_table = pd.read_csv(PATH_TO_TEST_OUTPUT + 'activationxp.csv',
                                  index_col='Unnamed: 0', dtype={'departementCode': 'object'})
     expected_table['dateCreated'] = pd.to_datetime(expected_table['dateCreated'])
 
@@ -29,7 +33,7 @@ def test_create_valid_offerer_table():
     # Given
     engine = create_engine('postgres://pass_culture:passq@localhost:5432')
     connection = engine.connect()
-    expected_table = pd.read_csv('/Users/louiseanfray/passculture/csv_from_jupyter/offererxp.csv',
+    expected_table = pd.read_csv(PATH_TO_TEST_OUTPUT + 'offererxp.csv',
                                  index_col='Unnamed: 0', dtype={'siren': 'object', 'offerer_postalCode': 'object'},
                                  encoding='utf-8')
 
@@ -44,7 +48,7 @@ def test_create_valid_venue_table():
     # Given
     engine = create_engine('postgres://pass_culture:passq@localhost:5432')
     connection = engine.connect()
-    expected_table = pd.read_csv('/Users/louiseanfray/passculture/csv_from_jupyter/venuexp.csv',
+    expected_table = pd.read_csv(PATH_TO_TEST_OUTPUT + 'venuexp.csv',
                                  index_col='Unnamed: 0', dtype={'siret': 'object', 'venue_postalCode': 'object'},
                                  encoding='utf-8')
 
@@ -59,7 +63,7 @@ def test_create_real_booking_after_ministerial_decree_table():
     # Given
     engine = create_engine('postgres://pass_culture:passq@localhost:5432')
     connection = engine.connect()
-    expected_table = pd.read_csv('/Users/louiseanfray/passculture/csv_from_jupyter/bookingxp.csv',
+    expected_table = pd.read_csv(PATH_TO_TEST_OUTPUT + 'bookingxp.csv',
                                  index_col='Unnamed: 0',
                                  dtype={'userDepartementCode': 'object'},
                                  encoding='utf-8')
@@ -76,7 +80,7 @@ def test_create_stock_table():
     # Given
     engine = create_engine('postgres://pass_culture:passq@localhost:5432')
     connection = engine.connect()
-    expected_table = pd.read_csv('/Users/louiseanfray/passculture/csv_from_jupyter/stockxp.csv',
+    expected_table = pd.read_csv(PATH_TO_TEST_OUTPUT + 'stockxp.csv',
                                  index_col='Unnamed: 0',
                                  dtype={},
                                  encoding='utf-8')
@@ -94,7 +98,7 @@ def test_create_offer_with_stocks_and_valid_venue_table():
     # Given
     engine = create_engine('postgres://pass_culture:passq@localhost:5432')
     connection = engine.connect()
-    expected_table = pd.read_csv('/Users/louiseanfray/passculture/csv_from_jupyter/offerxp.csv',
+    expected_table = pd.read_csv(PATH_TO_TEST_OUTPUT + 'offerxp.csv',
                                  index_col='Unnamed: 0',
                                  dtype={},
                                  encoding='utf-8')
@@ -115,7 +119,7 @@ def test_create_correspondance_table_between_offer_venue_and_offerer():
     # Given
     engine = create_engine('postgres://pass_culture:passq@localhost:5432')
     connection = engine.connect()
-    expected_table = pd.read_csv('/Users/louiseanfray/passculture/csv_from_jupyter/data_offer_ID.csv',
+    expected_table = pd.read_csv(PATH_TO_TEST_OUTPUT + 'data_offer_ID.csv',
                                  index_col='Unnamed: 0',
                                  dtype={},
                                  encoding='utf-8')
@@ -136,7 +140,7 @@ def test_create_correspondance_table_betwwen_booking_stock_and_offe():
     # Given
     engine = create_engine('postgres://pass_culture:passq@localhost:5432')
     connection = engine.connect()
-    expected_table = pd.read_csv('/Users/louiseanfray/passculture/csv_from_jupyter/data_booking_ID.csv',
+    expected_table = pd.read_csv(PATH_TO_TEST_OUTPUT + 'data_booking_ID.csv',
                                  index_col='Unnamed: 0',
                                  dtype={},
                                  encoding='utf-8')
@@ -152,7 +156,7 @@ def test_create_booking_to_repay_table():
     # Given
     engine = create_engine('postgres://pass_culture:passq@localhost:5432')
     connection = engine.connect()
-    expected_table = pd.read_csv('/Users/louiseanfray/passculture/csv_from_jupyter/booking_eligible.csv',
+    expected_table = pd.read_csv(PATH_TO_TEST_OUTPUT + 'booking_eligible.csv',
                                  index_col='Unnamed: 0',
                                  dtype={'siret': 'object', 'venue_postalCode': 'object'},
                                  encoding='utf-8')
@@ -173,7 +177,7 @@ def test_create_venues_to_repay_table():
     # Given
     engine = create_engine('postgres://pass_culture:passq@localhost:5432')
     connection = engine.connect()
-    expected_table = pd.read_csv('/Users/louiseanfray/passculture/csv_from_jupyter/venue_eligible_calculation.csv',
+    expected_table = pd.read_csv(PATH_TO_TEST_OUTPUT + 'venue_eligible_calculation.csv',
                                  index_col='Unnamed: 0',
                                  dtype={'siret': 'object', 'venue_postalCode': 'object'},
                                  encoding='utf-8')
