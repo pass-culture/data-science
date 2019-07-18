@@ -136,7 +136,7 @@ def test_create_correspondance_table_between_offer_venue_and_offerer():
     assert ordered_expected_table.equals(ordered_correspondance_table)
 
 
-def test_create_correspondance_table_betwwen_booking_stock_and_offe():
+def test_create_correspondance_table_betwwen_booking_stock_and_offer():
     # Given
     engine = create_engine('postgres://data:data@localhost:5432/pass-culture')
     connection = engine.connect()
