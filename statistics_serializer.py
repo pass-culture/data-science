@@ -1,16 +1,19 @@
 # coding: utf-8
 import pandas as pd
 
-from repository import get_activation_stock_id
+from repository import get_activation_stock_id, get_users, get_bookings, get_user_offerers, get_offerers, get_venues, \
+    get_stocks, get_offers
+
+MINISTERIAL_DECREE_DATE = '2019-02-04'
 
 
-def create_beneficiary_users_having_created_an_account_table(connection):
-    bookings = pd.read_sql_query('select * FROM booking;', connection)
-    users = pd.read_sql_query('select * FROM "user";', connection)
+def get_beneficiary_users_having_created_an_account_table(connection):
+    bookings = get_bookings(connection)
+    users = get_users(connection)
     activation_stock_id = get_activation_stock_id(connection)
-    ministerial_decree_date = '2019-02-04'
+
     is_activation_booking = (bookings['stockId'] == activation_stock_id)
-    is_after_ministerial_decree = (bookings['dateCreated'] >= ministerial_decree_date)
+    is_after_ministerial_decree = (bookings['dateCreated'] >= MINISTERIAL_DECREE_DATE)
     booking_columns_to_keep = ['userId', 'dateCreated']
     activation_bookings_after_ministerial_decree = bookings.loc[
         is_activation_booking & is_after_ministerial_decree, booking_columns_to_keep]
@@ -22,9 +25,9 @@ def create_beneficiary_users_having_created_an_account_table(connection):
     return users_having_created_an_account
 
 
-def create_valid_offerer_table(connection):
-    offerers = pd.read_sql_query('select * FROM offerer;', connection)
-    user_offerers = pd.read_sql_query('select * FROM user_offerer;', connection)
+def get_valid_offerer_table(connection):
+    offerers = get_offerers(connection)
+    user_offerers = get_user_offerers(connection)
     offerers_with_siren = offerers[offerers['siren'].notnull()]
     offerers_columns_to_keep = ['id', 'name', 'siren', 'address', 'postalCode', 'city']
     offerers_with_siren = offerers_with_siren[offerers_columns_to_keep]
@@ -41,9 +44,9 @@ def create_valid_offerer_table(connection):
     return offerers_with_siren_and_user_offerer
 
 
-def create_valid_venue_table(connection):
-    venues = pd.read_sql_query('select * FROM venue;', connection)
-    valid_offerers = create_valid_offerer_table(connection)
+def get_valid_venue_table(connection):
+    venues = get_venues(connection)
+    valid_offerers = get_valid_offerer_table(connection)
     venues = venues[['id', 'name', 'isVirtual', 'siret', 'address', 'postalCode', 'city', 'managingOffererId']]
 
     venues_with_valid_offerer = pd.merge(valid_offerers[['offererId']], venues, how='inner', left_on='offererId',
@@ -58,16 +61,15 @@ def create_valid_venue_table(connection):
     return venues_with_valid_offerer
 
 
-def create_real_booking_after_ministerial_decree_table(connection):
+def get_real_booking_after_ministerial_decree_table(connection):
     activation_stock_id = get_activation_stock_id(connection)
-    ministerial_decree_date = '2019-02-04'
 
-    bookings = pd.read_sql_query('select * FROM booking;', connection)
-    beneficiary_users = create_beneficiary_users_having_created_an_account_table(connection)
+    bookings = get_bookings(connection)
+    beneficiary_users = get_beneficiary_users_having_created_an_account_table(connection)
     bookings_with_user_information = _merge_bookings_with_beneficiary_users(beneficiary_users, bookings)
 
     real_bookings_after_ministerial_decree = _filter_real_bookings_and_users(
-        bookings_with_user_information, activation_stock_id, ministerial_decree_date)
+        bookings_with_user_information, activation_stock_id)
 
     del (real_bookings_after_ministerial_decree['isUsed'])
     del (real_bookings_after_ministerial_decree['isCancelled'])
@@ -77,9 +79,9 @@ def create_real_booking_after_ministerial_decree_table(connection):
     return real_bookings_after_ministerial_decree
 
 
-def create_stock_table(connection):
-    stocks = pd.read_sql_query('select * FROM stock;', connection)
-    real_bookings_after_ministerial_decree = create_real_booking_after_ministerial_decree_table(connection)
+def get_stock_table(connection):
+    stocks = get_stocks(connection)
+    real_bookings_after_ministerial_decree = get_real_booking_after_ministerial_decree_table(connection)
 
     stocks.rename(columns={'id': 'stockId'}, inplace=True)
 
@@ -91,10 +93,10 @@ def create_stock_table(connection):
     return stocks_with_stock_available
 
 
-def create_offer_with_stocks_and_valid_venue_table(connection):
-    offers = pd.read_sql_query('select * FROM offer;', connection)
-    stocks = create_stock_table(connection)
-    valid_venues = create_valid_venue_table(connection)
+def get_offer_with_stocks_and_valid_venue_table(connection):
+    offers = get_offers(connection)
+    stocks = get_stock_table(connection)
+    valid_venues = get_valid_venue_table(connection)
 
     offers_with_stocks_and_valid_venue = _keep_only_offers_with_stock_and_valid_venues(offers, stocks, valid_venues)
 
@@ -107,9 +109,9 @@ def create_offer_with_stocks_and_valid_venue_table(connection):
     return offers_with_human_category
 
 
-def create_correspondance_table_between_offer_venue_and_offerer(connection):
-    valid_venues = create_valid_venue_table(connection)
-    offers_with_stocks_and_valid_venue = create_offer_with_stocks_and_valid_venue_table(connection)
+def get_correspondance_table_between_offer_venue_and_offerer(connection):
+    valid_venues = get_valid_venue_table(connection)
+    offers_with_stocks_and_valid_venue = get_offer_with_stocks_and_valid_venue_table(connection)
     venues_with_offerer_id = valid_venues[['venueId', 'managingOffererId']]
     offers_with_venue_id = offers_with_stocks_and_valid_venue[['offerId', 'venueId']]
 
@@ -121,9 +123,9 @@ def create_correspondance_table_between_offer_venue_and_offerer(connection):
     return offers_with_venue_id_and_offerer_id
 
 
-def create_correspondance_table_betwwen_booking_stock_and_offer(connection):
-    real_bookings_after_ministerial_decree = create_real_booking_after_ministerial_decree_table(connection)
-    stocks = create_stock_table(connection)
+def get_correspondance_table_betwwen_booking_stock_and_offer(connection):
+    real_bookings_after_ministerial_decree = get_real_booking_after_ministerial_decree_table(connection)
+    stocks = get_stock_table(connection)
     bookings_with_stock_id = real_bookings_after_ministerial_decree[['bookingId', 'stockId']]
     stocks_with_offer_id = stocks[['stockId', 'offerId']]
 
@@ -134,12 +136,12 @@ def create_correspondance_table_betwwen_booking_stock_and_offer(connection):
     return bookings_with_stock_id_and_offer_id
 
 
-def create_booking_to_repay_table(connection, date):
-    offers_with_stocks_and_valid_venue = create_offer_with_stocks_and_valid_venue_table(connection)
-    valid_venues = create_valid_venue_table(connection)
-    stocks = create_stock_table(connection)
-    real_bookings_after_ministerial_decree = create_real_booking_after_ministerial_decree_table(connection)
-    correspondance_table_between_booking_stock_and_offer = create_correspondance_table_betwwen_booking_stock_and_offer(
+def get_booking_to_repay_table(connection, date):
+    offers_with_stocks_and_valid_venue = get_offer_with_stocks_and_valid_venue_table(connection)
+    valid_venues = get_valid_venue_table(connection)
+    stocks = get_stock_table(connection)
+    real_bookings_after_ministerial_decree = get_real_booking_after_ministerial_decree_table(connection)
+    correspondance_table_between_booking_stock_and_offer = get_correspondance_table_betwwen_booking_stock_and_offer(
         connection)
 
     correspondance_table_between_booking_and_offer = correspondance_table_between_booking_stock_and_offer[
@@ -166,9 +168,9 @@ def create_booking_to_repay_table(connection, date):
     return bookings_to_repay
 
 
-def create_venues_to_repay_table(connection, date):
-    bookings_to_repay = create_booking_to_repay_table(connection, date)
-    valid_venues = create_valid_venue_table(connection)
+def get_venues_to_repay_table(connection, date):
+    bookings_to_repay = get_booking_to_repay_table(connection, date)
+    valid_venues = get_valid_venue_table(connection)
 
     bookings_to_repay = bookings_to_repay.groupby(['venueId']).sum().reset_index()
 
@@ -194,17 +196,18 @@ def _merge_bookings_with_beneficiary_users(beneficiary_users, bookings):
     return bookings_with_user_information
 
 
-def _filter_real_bookings_and_users(bookings_with_user_information, activation_stock_id, ministerial_decree_date):
+def _filter_real_bookings_and_users(bookings_with_user_information, activation_stock_id):
     user_department_code_is_not_null = bookings_with_user_information['userDepartementCode'].notnull()
     global_department_code = '00'
     user_has_non_global_department_code = (
             bookings_with_user_information['userDepartementCode'] != global_department_code)
     bookings_with_user_information = bookings_with_user_information.loc[
         user_department_code_is_not_null & user_has_non_global_department_code]
-    real_bookings_with_user_information = bookings_with_user_information.loc[
+    bookings_on_non_activation_offer_with_user_information = bookings_with_user_information.loc[
         (bookings_with_user_information['stockId'] != activation_stock_id)]
-    real_bookings_with_user_information_after_ministerial_decree = real_bookings_with_user_information.loc[
-        real_bookings_with_user_information['dateCreated'] > ministerial_decree_date]
+    real_bookings_with_user_information_after_ministerial_decree = \
+    bookings_on_non_activation_offer_with_user_information.loc[
+        bookings_on_non_activation_offer_with_user_information['dateCreated'] > MINISTERIAL_DECREE_DATE]
     real_bookings_with_user_information_after_ministerial_decree = _add_quantity_and_amount_information_to_booking(
         real_bookings_with_user_information_after_ministerial_decree)
     return real_bookings_with_user_information_after_ministerial_decree
