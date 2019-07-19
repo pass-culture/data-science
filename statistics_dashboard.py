@@ -4,17 +4,17 @@ import pandas as pd
 import numpy as np
 import unidecode
 
-from statistics_serializer import create_beneficiary_users_having_created_an_account_table, \
-    create_real_booking_after_ministerial_decree_table, create_valid_offerer_table, \
-    create_correspondance_table_between_booking_stock_and_offer, create_offer_with_stocks_and_valid_venue_table, \
-    create_stock_table, create_correspondance_table_between_offer_venue_and_offerer, create_valid_venue_table, \
-    create_venues_to_repay_table, create_activated_users_table
+from statistics_serializer import get_beneficiary_users_having_created_an_account_table, \
+    get_real_booking_after_ministerial_decree_table, get_valid_offerer_table, \
+    get_correspondance_table_between_booking_stock_and_offer, get_offer_with_stocks_and_valid_venue_table, \
+    get_stock_table, get_correspondance_table_between_offer_venue_and_offerer, get_valid_venue_table, \
+    get_venues_to_repay_table, get_activated_users_table
 
 
-def create_usage_indicators(connection, department=None):
-    beneficiary_users_having_created_an_account = create_beneficiary_users_having_created_an_account_table(connection, department)
-    activated_users = create_activated_users_table(connection, department)
-    bookings = create_real_booking_after_ministerial_decree_table(connection, department)
+def get_usage_indicators(connection):
+    beneficiary_users_having_created_an_account = get_beneficiary_users_having_created_an_account_table(connection)
+    activated_users = get_activated_users_table(connection)
+    bookings = get_real_booking_after_ministerial_decree_table(connection)
     number_of_created_accounts = str(beneficiary_users_having_created_an_account.userId.nunique())
     number_of_activated_accounts = str(activated_users['id'].nunique())
     number_of_accounts_with_at_least_one_booking = str(bookings['userId'].nunique())
@@ -29,8 +29,8 @@ def create_usage_indicators(connection, department=None):
     return usage_indicators
 
 
-def create_departments_ranked_by_number_of_bookings(connection, department_list):
-    bookings = create_real_booking_after_ministerial_decree_table(connection)
+def get_departments_ranked_by_number_of_bookings(connection, department_list):
+    bookings = get_real_booking_after_ministerial_decree_table(connection)
     booking_columns_to_keep = ['userDepartementCode', 'quantity_net']
     bookings = bookings[booking_columns_to_keep]
     is_in_department_list = bookings['userDepartementCode'].isin(department_list)
@@ -48,14 +48,14 @@ def create_departments_ranked_by_number_of_bookings(connection, department_list)
     return departments_ranked_by_number_of_bookings
 
 
-def create_offerer_indicators(connection, date):
-    valid_offerers = create_valid_offerer_table(connection)
-    bookings = create_real_booking_after_ministerial_decree_table(connection)
-    correspondance_table_between_booking_stock_and_offer = create_correspondance_table_between_booking_stock_and_offer(
+def get_offerer_indicators(connection, date):
+    valid_offerers = get_valid_offerer_table(connection)
+    bookings = get_real_booking_after_ministerial_decree_table(connection)
+    correspondance_table_between_booking_stock_and_offer = get_correspondance_table_between_booking_stock_and_offer(
         connection)
-    offers = create_offer_with_stocks_and_valid_venue_table(connection)
-    stocks = create_stock_table(connection)
-    correspondance_table_between_offer_venue_and_offerer = create_correspondance_table_between_offer_venue_and_offerer(
+    offers = get_offer_with_stocks_and_valid_venue_table(connection)
+    stocks = get_stock_table(connection)
+    correspondance_table_between_offer_venue_and_offerer = get_correspondance_table_between_offer_venue_and_offerer(
         connection)
 
     total_number_of_valid_offerers = _get_total_number_of_valid_offerers(valid_offerers)
@@ -81,12 +81,12 @@ def create_offerer_indicators(connection, date):
     return offerer_indicators
 
 
-def create_offer_indicators(connection, T):
-    bookings = create_real_booking_after_ministerial_decree_table(connection)
-    correspondance_table_between_booking_stock_and_offer = create_correspondance_table_between_booking_stock_and_offer(
+def get_offer_indicators(connection, T):
+    bookings = get_real_booking_after_ministerial_decree_table(connection)
+    correspondance_table_between_booking_stock_and_offer = get_correspondance_table_between_booking_stock_and_offer(
         connection)
-    offers = create_offer_with_stocks_and_valid_venue_table(connection)
-    stocks = create_stock_table(connection)
+    offers = get_offer_with_stocks_and_valid_venue_table(connection)
+    stocks = get_stock_table(connection)
 
     number_of_booked_offers = _get_number_of_booked_offers(bookings,
                                                            correspondance_table_between_booking_stock_and_offer, offers)
@@ -103,8 +103,8 @@ def create_offer_indicators(connection, T):
     return offer_indicators
 
 
-def create_booking_indicators(connection):
-    bookings = create_real_booking_after_ministerial_decree_table(connection)
+def get_booking_indicators(connection):
+    bookings = get_real_booking_after_ministerial_decree_table(connection)
 
     total_number_of_not_cancelled_bookings = int(bookings.quantity_net.sum())
     number_of_validated_bookings = int(bookings.quantity_used.sum())
@@ -116,23 +116,23 @@ def create_booking_indicators(connection):
     return booking_indicators
 
 
-def create_offer_indicators_by_category_and_digital(connection):
-    offers = create_offer_with_stocks_and_valid_venue_table(connection)
-    venues = create_valid_venue_table(connection)
+def get_offer_indicators_by_category_and_digital(connection):
+    offers = get_offer_with_stocks_and_valid_venue_table(connection)
+    venues = get_valid_venue_table(connection)
 
     offers_with_category_and_digital = _add_category_and_digital_to_offer(offers, venues)
 
-    offers_by_category_and_digital = _create_number_of_offers_by_category_and_digital(
+    offers_by_category_and_digital = _get_number_of_offers_by_category_and_digital(
         offers_with_category_and_digital)
     return offers_by_category_and_digital
 
 
-def create_booking_indicators_by_category_and_digital(connection):
-    bookings = create_real_booking_after_ministerial_decree_table(connection)
-    correspondance_table_between_booking_stock_and_offer = create_correspondance_table_between_booking_stock_and_offer(
+def get_booking_indicators_by_category_and_digital(connection):
+    bookings = get_real_booking_after_ministerial_decree_table(connection)
+    correspondance_table_between_booking_stock_and_offer = get_correspondance_table_between_booking_stock_and_offer(
         connection)
-    offers = create_offer_with_stocks_and_valid_venue_table(connection)
-    venues = create_valid_venue_table(connection)
+    offers = get_offer_with_stocks_and_valid_venue_table(connection)
+    venues = get_valid_venue_table(connection)
 
     offer_with_type = _add_category_to_offer(offers)
     offer_with_virtual = _add_digital_to_offer(offers, venues)
@@ -164,12 +164,12 @@ def create_booking_indicators_by_category_and_digital(connection):
     return booking_by_type_and_virtual
 
 
-def create_finance_indicators(connection, date):
-    beneficiaries_having_created_an_account = create_beneficiary_users_having_created_an_account_table(connection)
+def get_finance_indicators(connection, date):
+    beneficiaries_having_created_an_account = get_beneficiary_users_having_created_an_account_table(connection)
     beneficiaries_having_activated_their_account = beneficiaries_having_created_an_account.loc[
         beneficiaries_having_created_an_account['canBookFreeOffers'] == True]
-    bookings = create_real_booking_after_ministerial_decree_table(connection)
-    venues_to_repay = create_venues_to_repay_table(connection, date)
+    bookings = get_real_booking_after_ministerial_decree_table(connection)
+    venues_to_repay = get_venues_to_repay_table(connection, date)
 
     credit_per_beneficiary = 500
     activated_credit = int(beneficiaries_having_activated_their_account['userId'].nunique() * credit_per_beneficiary)
@@ -183,11 +183,11 @@ def create_finance_indicators(connection, date):
     return finance_indicators
 
 
-def create_ranking_of_most_booked_offers(connection):
-    bookings = create_real_booking_after_ministerial_decree_table(connection)
-    correspondance_table_between_booking_stock_and_offer = create_correspondance_table_between_booking_stock_and_offer(
+def get_ranking_of_most_booked_offers(connection):
+    bookings = get_real_booking_after_ministerial_decree_table(connection)
+    correspondance_table_between_booking_stock_and_offer = get_correspondance_table_between_booking_stock_and_offer(
         connection)
-    offers = create_offer_with_stocks_and_valid_venue_table(connection)
+    offers = get_offer_with_stocks_and_valid_venue_table(connection)
 
     booked_id = bookings[bookings['quantity_net'] > 0].bookingId.unique()
     correspondance_table_of_not_cancelled_bookings = correspondance_table_between_booking_stock_and_offer.loc[
@@ -216,7 +216,7 @@ def create_ranking_of_most_booked_offers(connection):
     return top_20_quantity_and_amount_booked_per_offer
 
 
-def create_ranking_of_most_booked_offerers_ordered_by_quantity(connection, department=None):
+def get_ranking_of_most_booked_offerers_ordered_by_quantity(connection, department=None):
     not_cancelled_bookings_with_name_quantity_amount_and_offerer = _get_not_cancelled_bookings_with_name_quantity_amout_and_offerer(
         connection, department=None)
     top_20_quantity_and_amount_booked_per_offerer = not_cancelled_bookings_with_name_quantity_amount_and_offerer.nlargest(
@@ -230,7 +230,7 @@ def create_ranking_of_most_booked_offerers_ordered_by_quantity(connection, depar
     return top_20_quantity_and_amount_booked_per_offerer_ordered_by_quantity
 
 
-def create_ranking_of_most_booked_offerers_ordered_by_amount(connection):
+def get_ranking_of_most_booked_offerers_ordered_by_amount(connection):
     not_cancelled_bookings_with_name_quantity_amount_and_offerer = _get_not_cancelled_bookings_with_name_quantity_amout_and_offerer(
         connection)
     top_20_quantity_and_amount_booked_per_offerer = not_cancelled_bookings_with_name_quantity_amount_and_offerer.nlargest(
@@ -246,7 +246,7 @@ def create_ranking_of_most_booked_offerers_ordered_by_amount(connection):
     return top_20_quantity_and_amount_booked_per_offerer_sorted_by_amount
 
 
-def _create_number_of_offers_by_category_and_digital(offers_with_category_and_digital):
+def _get_number_of_offers_by_category_and_digital(offers_with_category_and_digital):
     offers_by_category_and_digital = pd.pivot_table(offers_with_category_and_digital,
                                                     values=['offerId', 'categorie', 'isVirtual'],
                                                     index=['categorie', 'isVirtual'],
@@ -362,13 +362,13 @@ def _get_booked_offer_ids(bookings, correspondance_table_between_booking_stock_a
 
 
 def _get_not_cancelled_bookings_with_name_quantity_amout_and_offerer(connection, department=None):
-    bookings = create_real_booking_after_ministerial_decree_table(connection, department)
-    correspondance_table_between_booking_stock_and_offer = create_correspondance_table_between_booking_stock_and_offer(
+    bookings = get_real_booking_after_ministerial_decree_table(connection)
+    correspondance_table_between_booking_stock_and_offer = get_correspondance_table_between_booking_stock_and_offer(
         connection)
-    offers = create_offer_with_stocks_and_valid_venue_table(connection, department)
-    correspondance_table_between_offer_venue_and_offerer = create_correspondance_table_between_offer_venue_and_offerer(
+    offers = get_offer_with_stocks_and_valid_venue_table(connection)
+    correspondance_table_between_offer_venue_and_offerer = get_correspondance_table_between_offer_venue_and_offerer(
         connection)
-    offerers = create_valid_offerer_table(connection)
+    offerers = get_valid_offerer_table(connection)
     not_cancelled_bookings_with_offer_name = _get_not_cancelled_bookings_with_offer_name(bookings,
                                                                                          correspondance_table_between_booking_stock_and_offer,
                                                                                          offers)

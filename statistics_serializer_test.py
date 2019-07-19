@@ -1,7 +1,8 @@
 import os
 
 import pandas as pd
-from sqlalchemy import create_engine
+
+from test_utils import connect_to_database
 
 PATH_TO_TEST_OUTPUT = os.environ['PATH_TO_TEST_OUTPUT']
 
@@ -10,14 +11,13 @@ from statistics_serializer import get_beneficiary_users_having_created_an_accoun
     get_valid_venue_table, get_real_booking_after_ministerial_decree_table, get_stock_table, \
     get_offer_with_stocks_and_valid_venue_table, \
     get_correspondance_table_between_offer_venue_and_offerer, \
-    get_correspondance_table_betwwen_booking_stock_and_offer, \
+    get_correspondance_table_between_booking_stock_and_offer, \
     get_venues_to_repay_table, get_booking_to_repay_table
 
 
 def test_create_beneficiary_users_having_created_an_account_table():
     # Given
-    engine = create_engine('postgres://data:data@localhost:5432/pass-culture')
-    connection = engine.connect()
+    connection = connect_to_database()
     expected_table = pd.read_csv(PATH_TO_TEST_OUTPUT + 'activationxp.csv',
                                  index_col='Unnamed: 0', dtype={'departementCode': 'object'})
     expected_table['dateCreated'] = pd.to_datetime(expected_table['dateCreated'])
@@ -31,8 +31,7 @@ def test_create_beneficiary_users_having_created_an_account_table():
 
 def test_create_valid_offerer_table():
     # Given
-    engine = create_engine('postgres://data:data@localhost:5432/pass-culture')
-    connection = engine.connect()
+    connection = connect_to_database()
     expected_table = pd.read_csv(PATH_TO_TEST_OUTPUT + 'offererxp.csv',
                                  index_col='Unnamed: 0', dtype={'siren': 'object', 'offerer_postalCode': 'object'},
                                  encoding='utf-8')
@@ -46,8 +45,7 @@ def test_create_valid_offerer_table():
 
 def test_create_valid_venue_table():
     # Given
-    engine = create_engine('postgres://data:data@localhost:5432/pass-culture')
-    connection = engine.connect()
+    connection = connect_to_database()
     expected_table = pd.read_csv(PATH_TO_TEST_OUTPUT + 'venuexp.csv',
                                  index_col='Unnamed: 0', dtype={'siret': 'object', 'venue_postalCode': 'object'},
                                  encoding='utf-8')
@@ -61,8 +59,7 @@ def test_create_valid_venue_table():
 
 def test_create_real_booking_after_ministerial_decree_table():
     # Given
-    engine = create_engine('postgres://data:data@localhost:5432/pass-culture')
-    connection = engine.connect()
+    connection = connect_to_database()
     expected_table = pd.read_csv(PATH_TO_TEST_OUTPUT + 'bookingxp.csv',
                                  index_col='Unnamed: 0',
                                  dtype={'userDepartementCode': 'object'},
@@ -78,8 +75,7 @@ def test_create_real_booking_after_ministerial_decree_table():
 
 def test_create_stock_table():
     # Given
-    engine = create_engine('postgres://data:data@localhost:5432/pass-culture')
-    connection = engine.connect()
+    connection = connect_to_database()
     expected_table = pd.read_csv(PATH_TO_TEST_OUTPUT + 'stockxp.csv',
                                  index_col='Unnamed: 0',
                                  dtype={},
@@ -96,8 +92,7 @@ def test_create_stock_table():
 
 def test_create_offer_with_stocks_and_valid_venue_table():
     # Given
-    engine = create_engine('postgres://data:data@localhost:5432/pass-culture')
-    connection = engine.connect()
+    connection = connect_to_database()
     expected_table = pd.read_csv(PATH_TO_TEST_OUTPUT + 'offerxp.csv',
                                  index_col='Unnamed: 0',
                                  dtype={},
@@ -117,8 +112,7 @@ def test_create_offer_with_stocks_and_valid_venue_table():
 
 def test_create_correspondance_table_between_offer_venue_and_offerer():
     # Given
-    engine = create_engine('postgres://data:data@localhost:5432/pass-culture')
-    connection = engine.connect()
+    connection = connect_to_database()
     expected_table = pd.read_csv(PATH_TO_TEST_OUTPUT + 'data_offer_ID.csv',
                                  index_col='Unnamed: 0',
                                  dtype={},
@@ -138,15 +132,14 @@ def test_create_correspondance_table_between_offer_venue_and_offerer():
 
 def test_create_correspondance_table_betwwen_booking_stock_and_offer():
     # Given
-    engine = create_engine('postgres://data:data@localhost:5432/pass-culture')
-    connection = engine.connect()
+    connection = connect_to_database()
     expected_table = pd.read_csv(PATH_TO_TEST_OUTPUT + 'data_booking_ID.csv',
                                  index_col='Unnamed: 0',
                                  dtype={},
                                  encoding='utf-8')
 
     # When
-    data_booking_ID_table = get_correspondance_table_betwwen_booking_stock_and_offer(connection)
+    data_booking_ID_table = get_correspondance_table_between_booking_stock_and_offer(connection)
 
     # Then
     assert expected_table.equals(data_booking_ID_table)
@@ -154,8 +147,7 @@ def test_create_correspondance_table_betwwen_booking_stock_and_offer():
 
 def test_create_booking_to_repay_table():
     # Given
-    engine = create_engine('postgres://data:data@localhost:5432/pass-culture')
-    connection = engine.connect()
+    connection = connect_to_database()
     expected_table = pd.read_csv(PATH_TO_TEST_OUTPUT + 'booking_eligible.csv',
                                  index_col='Unnamed: 0',
                                  dtype={'siret': 'object', 'venue_postalCode': 'object'},
@@ -175,8 +167,7 @@ def test_create_booking_to_repay_table():
 
 def test_create_venues_to_repay_table():
     # Given
-    engine = create_engine('postgres://data:data@localhost:5432/pass-culture')
-    connection = engine.connect()
+    connection = connect_to_database()
     expected_table = pd.read_csv(PATH_TO_TEST_OUTPUT + 'venue_eligible_calculation.csv',
                                  index_col='Unnamed: 0',
                                  dtype={'siret': 'object', 'venue_postalCode': 'object'},
