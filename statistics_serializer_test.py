@@ -2,7 +2,7 @@ import os
 
 import pandas as pd
 
-from test_utils import connect_to_database
+from connectors import connect_to_postgres
 
 PATH_TO_TEST_OUTPUT = os.environ['PATH_TO_TEST_OUTPUT']
 
@@ -17,7 +17,7 @@ from statistics_serializer import get_beneficiary_users_having_created_an_accoun
 
 def test_create_beneficiary_users_having_created_an_account_table():
     # Given
-    connection = connect_to_database()
+    connection = connect_to_postgres()
     expected_table = pd.read_csv(PATH_TO_TEST_OUTPUT + 'activationxp.csv',
                                  index_col='Unnamed: 0', dtype={'departementCode': 'object'})
     expected_table['dateCreated'] = pd.to_datetime(expected_table['dateCreated'])
@@ -31,7 +31,7 @@ def test_create_beneficiary_users_having_created_an_account_table():
 
 def test_create_valid_offerer_table():
     # Given
-    connection = connect_to_database()
+    connection = connect_to_postgres()
     expected_table = pd.read_csv(PATH_TO_TEST_OUTPUT + 'offererxp.csv',
                                  index_col='Unnamed: 0', dtype={'siren': 'object', 'offerer_postalCode': 'object'},
                                  encoding='utf-8')
@@ -45,7 +45,7 @@ def test_create_valid_offerer_table():
 
 def test_create_valid_venue_table():
     # Given
-    connection = connect_to_database()
+    connection = connect_to_postgres()
     expected_table = pd.read_csv(PATH_TO_TEST_OUTPUT + 'venuexp.csv',
                                  index_col='Unnamed: 0', dtype={'siret': 'object', 'venue_postalCode': 'object'},
                                  encoding='utf-8')
@@ -59,7 +59,7 @@ def test_create_valid_venue_table():
 
 def test_create_real_booking_after_ministerial_decree_table():
     # Given
-    connection = connect_to_database()
+    connection = connect_to_postgres()
     expected_table = pd.read_csv(PATH_TO_TEST_OUTPUT + 'bookingxp.csv',
                                  index_col='Unnamed: 0',
                                  dtype={'userDepartementCode': 'object'},
@@ -75,24 +75,26 @@ def test_create_real_booking_after_ministerial_decree_table():
 
 def test_create_stock_table():
     # Given
-    connection = connect_to_database()
+    connection = connect_to_postgres()
     expected_table = pd.read_csv(PATH_TO_TEST_OUTPUT + 'stockxp.csv',
                                  index_col='Unnamed: 0',
                                  dtype={},
                                  encoding='utf-8')
     expected_table['bookingLimitDatetime'] = pd.to_datetime(expected_table['bookingLimitDatetime'])
     expected_table['endDatetime'] = pd.to_datetime(expected_table['endDatetime'])
+    expected_table.reset_index(drop=True, inplace=True)
 
     # When
     stock_table = get_stock_table(connection)
 
     # Then
+    stock_table.reset_index(drop=True, inplace=True)
     assert expected_table.equals(stock_table)
 
 
 def test_create_offer_with_stocks_and_valid_venue_table():
     # Given
-    connection = connect_to_database()
+    connection = connect_to_postgres()
     expected_table = pd.read_csv(PATH_TO_TEST_OUTPUT + 'offerxp.csv',
                                  index_col='Unnamed: 0',
                                  dtype={},
@@ -112,7 +114,7 @@ def test_create_offer_with_stocks_and_valid_venue_table():
 
 def test_create_correspondance_table_between_offer_venue_and_offerer():
     # Given
-    connection = connect_to_database()
+    connection = connect_to_postgres()
     expected_table = pd.read_csv(PATH_TO_TEST_OUTPUT + 'data_offer_ID.csv',
                                  index_col='Unnamed: 0',
                                  dtype={},
@@ -132,22 +134,24 @@ def test_create_correspondance_table_between_offer_venue_and_offerer():
 
 def test_create_correspondance_table_betwwen_booking_stock_and_offer():
     # Given
-    connection = connect_to_database()
+    connection = connect_to_postgres()
     expected_table = pd.read_csv(PATH_TO_TEST_OUTPUT + 'data_booking_ID.csv',
                                  index_col='Unnamed: 0',
                                  dtype={},
                                  encoding='utf-8')
+    expected_table.reset_index(inplace=True, drop=True)
 
     # When
     data_booking_ID_table = get_correspondance_table_between_booking_stock_and_offer(connection)
 
     # Then
+    data_booking_ID_table.reset_index(inplace=True, drop=True)
     assert expected_table.equals(data_booking_ID_table)
 
 
 def test_create_booking_to_repay_table():
     # Given
-    connection = connect_to_database()
+    connection = connect_to_postgres()
     expected_table = pd.read_csv(PATH_TO_TEST_OUTPUT + 'booking_eligible.csv',
                                  index_col='Unnamed: 0',
                                  dtype={'siret': 'object', 'venue_postalCode': 'object'},
@@ -167,7 +171,7 @@ def test_create_booking_to_repay_table():
 
 def test_create_venues_to_repay_table():
     # Given
-    connection = connect_to_database()
+    connection = connect_to_postgres()
     expected_table = pd.read_csv(PATH_TO_TEST_OUTPUT + 'venue_eligible_calculation.csv',
                                  index_col='Unnamed: 0',
                                  dtype={'siret': 'object', 'venue_postalCode': 'object'},
