@@ -4,3 +4,5 @@ sqlalchemy
 pytest
 psycopg2-binary
 unidecode
+apscheduler
+pygsheets
