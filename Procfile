@@ -1,1 +1,1 @@
-clock: python scripts.py
+web: python scripts.py

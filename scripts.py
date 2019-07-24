@@ -74,4 +74,4 @@ if __name__ == '__main__':
     today = datetime.utcnow()
     update_global_dashboard_today = partial(update_global_dashboard, date=today)
 
-    scheduler.add_job(update_global_dashboard_today, 'cron', id='send_final_booking_recaps', month='*', day=24, hour=16, minute=15)
+    scheduler.add_job(update_global_dashboard_today, 'cron', id='send_final_booking_recaps', month='*', day=24, hour=16, minute=45)
