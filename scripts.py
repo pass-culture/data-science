@@ -1,4 +1,8 @@
 # coding: utf-8
+from datetime import datetime
+from functools import partial
+
+from apscheduler.schedulers.blocking import BlockingScheduler
 
 from connectors import get_worksheet, connect_to_postgres
 from statistics_dashboard import get_usage_indicators, get_departments_ranked_by_number_of_bookings, \
@@ -64,8 +68,10 @@ def update_global_dashboard(date, get_global_dashboard=get_worksheet,
         ranking_of_most_booked_offerers_sorted_by_amount[['Acteur culturel', '# réservations nettes', '€ dépensés']],
         ranking_of_most_booked_offerers_sorted_by_amount_spreadsheet_location)
 
-#
-# if __name__ == '__main__':
-#     scheduler = BlockingScheduler()
-#
-#     scheduler.add_job('cron', id='send_final_booking_recaps', month='*')
+
+if __name__ == '__main__':
+    scheduler = BlockingScheduler()
+    today = datetime.utcnow()
+    update_global_dashboard_today = partial(update_global_dashboard, date=today)
+
+    scheduler.add_job(update_global_dashboard_today, 'cron', id='send_final_booking_recaps', month='*', day=24, hour=16, minute=15)
