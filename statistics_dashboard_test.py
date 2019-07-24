@@ -29,7 +29,6 @@ def test_get_usage_indicators():
 
     # Then
     usage_indicators_table['Valeur'] = usage_indicators_table['Valeur'].astype(float)
-    usage_indicators_table['Valeur'] = usage_indicators_table['Valeur'].round(decimals=2)
     usage_indicators_table['Valeur'] = usage_indicators_table['Valeur'].astype('object')
     assert expected_table.equals(usage_indicators_table)
 
@@ -109,6 +108,7 @@ def test_get_booking_indicators_by_category_and_digital():
     connection = connect_to_postgres()
     expected_table = pd.read_csv(PATH_TO_TEST_OUTPUT + 'booking_by_type_and_virtual.csv',
                                  index_col='Unnamed: 0', encoding='utf-8')
+    expected_table['# réservations totales'] = expected_table['# réservations totales'].astype(int)
 
     # When
     booking_indicators_by_category_and_digital_table = get_booking_indicators_by_category_and_digital(connection)
@@ -137,6 +137,8 @@ def test_get_ranking_of_most_booked_offers():
     expected_table = pd.read_csv(PATH_TO_TEST_OUTPUT + 'top_by_offer_quantity.csv',
                                  index_col='Unnamed: 0', encoding='utf-8')
 
+    expected_table[u'€ depenses'] = expected_table[u'€ depenses'].round(decimals=2)
+
     # When
     ranking_of_most_booked_offers = get_ranking_of_most_booked_offers(connection)
 
@@ -156,7 +158,6 @@ def test_get_ranking_of_most_booked_offerers_ordered_by_quantity():
         connection)
 
     # Then
-    ranking_of_most_booked_offerers_sorted_by_quantity[u'€ dépensés'] = ranking_of_most_booked_offerers_sorted_by_quantity[u'€ dépensés'].round(decimals=2)
     assert expected_table.equals(ranking_of_most_booked_offerers_sorted_by_quantity)
 
 
@@ -173,6 +174,4 @@ def test_get_ranking_of_most_booked_offerers_ordered_by_amount():
         connection)
 
     # Then
-    ranking_of_most_booked_offerers_sorted_by_amount[u'€ dépensés'] = ranking_of_most_booked_offerers_sorted_by_amount[
-        u'€ dépensés'].round(decimals=2)
     assert expected_table.equals(ranking_of_most_booked_offerers_sorted_by_amount)

@@ -26,6 +26,7 @@ def get_usage_indicators(connection):
                                             "Valeur": [number_of_created_accounts, number_of_activated_accounts,
                                                        number_of_accounts_with_at_least_one_booking, mean_number_of_booking, mean_expensed_amount]},
                                            columns=["Indicateur", "Valeur"])
+    usage_indicators['Valeur'] = usage_indicators['Valeur'].astype(float).round(decimals=2)
     return usage_indicators
 
 
@@ -160,6 +161,7 @@ def get_booking_indicators_by_category_and_digital(connection):
     booking_by_type_and_virtual.reset_index(inplace=True)
     booking_by_type_and_virtual.rename(columns={'isVirtual': 'Support', 'bookingId': '# réservations totales'},
                                        inplace=True)
+    booking_by_type_and_virtual['# réservations totales'] = booking_by_type_and_virtual['# réservations totales'].astype(int)
 
     return booking_by_type_and_virtual
 
@@ -213,6 +215,7 @@ def get_ranking_of_most_booked_offers(connection):
         columns={'name': 'Offre', 'quantity_net': '# reservations', 'amount_net': '€ depenses'}, inplace=True)
     top_20_quantity_and_amount_booked_per_offer['Offre'] = top_20_quantity_and_amount_booked_per_offer['Offre'].apply(
         lambda x: unidecode.unidecode(x))
+    top_20_quantity_and_amount_booked_per_offer[u'€ depenses'] = top_20_quantity_and_amount_booked_per_offer[u'€ depenses'].round(decimals=2)
     return top_20_quantity_and_amount_booked_per_offer
 
 
@@ -227,6 +230,8 @@ def get_ranking_of_most_booked_offerers_ordered_by_quantity(connection, departme
     top_20_quantity_and_amount_booked_per_offerer_ordered_by_quantity.rename(
         columns={'offerer_name': 'Acteur culturel', 'quantity_net': '# réservations nettes',
                  'amount_net': '€ dépensés'}, inplace=True)
+    top_20_quantity_and_amount_booked_per_offerer_ordered_by_quantity[u'€ dépensés'] = \
+    top_20_quantity_and_amount_booked_per_offerer_ordered_by_quantity[u'€ dépensés'].round(decimals=2)
     return top_20_quantity_and_amount_booked_per_offerer_ordered_by_quantity
 
 
@@ -243,6 +248,8 @@ def get_ranking_of_most_booked_offerers_ordered_by_amount(connection):
     top_20_quantity_and_amount_booked_per_offerer_sorted_by_amount.rename(
         columns={'offerer_name': 'Acteur culturel', 'quantity_net': '# réservations nettes',
                  'amount_net': '€ dépensés'}, inplace=True)
+    top_20_quantity_and_amount_booked_per_offerer_sorted_by_amount[u'€ dépensés'] = top_20_quantity_and_amount_booked_per_offerer_sorted_by_amount[
+        u'€ dépensés'].round(decimals=2)
     return top_20_quantity_and_amount_booked_per_offerer_sorted_by_amount
 
 

@@ -9,7 +9,6 @@ DASHBOARD_GSHEET_SECRET = 'secrets/credentials.json'
 def get_worksheet(sheet_name, tab_name):
     gc = pygsheets.authorize(
         client_secret=DASHBOARD_GSHEET_SECRET)
-    sheet_name = sheet_name
     dashboard_sheet = gc.open(sheet_name)
     global_tab_name = tab_name
     global_dashboard_worksheet = dashboard_sheet.worksheet_by_title(global_tab_name)
