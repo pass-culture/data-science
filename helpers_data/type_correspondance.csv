@@ -1,0 +1,25 @@
+type;categorie
+EventType.CINEMA;Cinéma
+EventType.CONFERENCE_DEBAT_DEDICACE;Conférence Débat Dédicace
+EventType.JEUX;Jeux
+EventType.MUSEES_PATRIMOINE;Musée et Patrimoine
+EventType.MUSIQUE;Musique
+EventType.PRATIQUE_ARTISTIQUE;Pratique artistique
+EventType.SPECTACLE_VIVANT;Spectacle vivant
+ThingType.AUDIOVISUEL;Audiovisuel
+ThingType.CINEMA_ABO;Cinéma
+ThingType.JEUX;Jeux vidéo
+ThingType.JEUX_VIDEO;Jeux vidéo
+ThingType.LIVRE_EDITION;Livre
+ThingType.MUSEES_PATRIMOINE_ABO;Musée et Patrimoine
+ThingType.MUSIQUE;Musique
+ThingType.PRATIQUE_ARTISTIQUE_ABO;Pratique artistique
+ThingType.PRESSE_ABO;Presse
+Workshop;Conférence Débat Dédicace
+ThingType.MUSIQUE_ABO;Musique
+Combo;Autre
+BookReading;Autre
+JEUX_ABO;Jeux vidéo
+EventType.LIVRE_EDITION;Livre
+CONFERENCE_DEBAT_DEDICACE;Conférence Débat Dédicace
+Other;Autre
