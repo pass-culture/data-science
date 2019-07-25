@@ -1,4 +1,3 @@
-# coding: utf-8
 import pandas as pd
 
 from repository import get_activation_stock_id, get_users, get_bookings, get_user_offerers, get_offerers, get_venues, \

@@ -15,28 +15,28 @@ def get_activation_stock_id(connection):
 
 
 def get_users(connection):
-    return pd.read_sql_query('select * FROM "user";', connection)
+    return pd.read_sql_query('SELECT * FROM "user";', connection)
 
 
 def get_bookings(connection):
-    return pd.read_sql_query('select * FROM booking;', connection)
+    return pd.read_sql_query('SELECT * FROM booking;', connection)
 
 
 def get_user_offerers(connection):
-    return pd.read_sql_query('select * FROM user_offerer;', connection)
+    return pd.read_sql_query('SELECT * FROM user_offerer;', connection)
 
 
 def get_offerers(connection):
-    return pd.read_sql_query('select * FROM offerer;', connection)
+    return pd.read_sql_query('SELECT * FROM offerer;', connection)
 
 
 def get_venues(connection):
-    return pd.read_sql_query('select * FROM venue;', connection)
+    return pd.read_sql_query('SELECT * FROM venue;', connection)
 
 
 def get_stocks(connection):
-    return pd.read_sql_query('select * FROM stock;', connection)
+    return pd.read_sql_query('SELECT * FROM stock;', connection)
 
 
 def get_offers(connection):
-    return pd.read_sql_query('select * FROM offer;', connection)
+    return pd.read_sql_query('SELECT * FROM offer;', connection)

@@ -163,10 +163,10 @@ def test_create_booking_to_repay_table():
 
     expected_table = expected_table.fillna('')
     expected_table.reset_index(inplace=True, drop=True)
-    date = '2019-07-05'
+    reference_date_to_consider_who_is_eligible_to_be_paid = '2019-07-05'
 
     # When
-    booking_to_repay_table = get_booking_to_repay_table(connection, date)
+    booking_to_repay_table = get_booking_to_repay_table(connection, reference_date_to_consider_who_is_eligible_to_be_paid)
 
     # Then
     booking_to_repay_table.reset_index(inplace=True, drop=True)
@@ -188,9 +188,10 @@ def test_create_venues_to_repay_table():
         ['amount_net', 'amount_net_paid', 'amount_really_used', 'amount_really_used_paid']].round(
         decimals=2)
     pd.set_option('display.max_columns', None)
-    date = '2019-07-05'
+    reference_date_to_consider_who_is_eligible_to_be_paid = '2019-07-05'
+
     # When
-    venues_to_repay = get_venues_to_repay_table(connection, date)
+    venues_to_repay = get_venues_to_repay_table(connection, reference_date_to_consider_who_is_eligible_to_be_paid)
 
     # Then
     venues_to_repay[

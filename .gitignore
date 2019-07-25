@@ -1,5 +1,9 @@
 .idea/
+.ipynb_checkpoints/
 __pycache__/
 data/
 venv/
+secrets/
 Test connection SQL.ipynb
+*.pyc
+*.json
