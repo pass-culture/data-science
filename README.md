@@ -4,9 +4,10 @@ Comment préparer son poste pour l'analyse de données
 ## Bonnes pratiques :
 - Chiffrer son disque dur
 - Avoir un compte GitHub avec double identification (et scalingo si tu n'utilises pas GitHub pour t'y connecter)
-- Demander accès à la page scalingo
+- Demander l'accès aux applications surscalingo
 
-## Installations
+## Installations préalables
+
 ### Brew : 
 Utile si tu as un Mac
 https://brew.sh/
@@ -18,15 +19,18 @@ Une fois installé, jouer la commande `docker pull postgres`
 
 ### Python 3
 https://www.python.org/downloads/
-Puis installer ces librairies (dans un environnement virtuel de préférence) :
-- jupyter
-- docker
-- psycopg2
-`pip install [nom de la librairie]`
 
-### Postgres SQL
-brew install postgresql
+### Environnement virtuel python
+```
+virtualenv venv -p /path/to/python3
+source venv/bin/activate
+pip install -r requirements.txt
+```
 
+## Lancer Jupyter
+```
+./run-jupyter.sh
+```
 
 ## Pour plus d'infos
 Tuto sur les environnements virtuels en utilisant conda : https://uoa-eresearch.github.io/eresearch-cookbook/recipe/2014/11/20/conda/
