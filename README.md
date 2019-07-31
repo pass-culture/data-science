@@ -4,29 +4,42 @@ Comment préparer son poste pour l'analyse de données
 ## Bonnes pratiques :
 - Chiffrer son disque dur
 - Avoir un compte GitHub avec double identification (et scalingo si tu n'utilises pas GitHub pour t'y connecter)
-- Demander accès à la page scalingo
+- Demander l'accès aux applications surscalingo
 
-## Installations
-### Brew : 
-Utile si tu as un Mac
-https://brew.sh/
-
-### Docker
-Mac : https://docs.docker.com/docker-for-mac/install/
-Linux : https://runnable.com/docker/install-docker-on-linux
-Une fois installé, jouer la commande `docker pull postgres`
+## Prérequis
 
 ### Python 3
 https://www.python.org/downloads/
-Puis installer ces librairies (dans un environnement virtuel de préférence) :
-- jupyter
-- docker
-- psycopg2
-`pip install [nom de la librairie]`
 
-### Postgres SQL
-brew install postgresql
+Une fois installé :
+```
+pip install virtualenv
+```
 
+### Docker
+- Mac : https://docs.docker.com/docker-for-mac/install/
+- Linux : https://runnable.com/docker/install-docker-on-linux
 
-## Pour plus d'infos
-Tuto sur les environnements virtuels en utilisant conda : https://uoa-eresearch.github.io/eresearch-cookbook/recipe/2014/11/20/conda/
+Une fois installé : 
+```
+docker pull postgres
+```
+
+### Brew (utile si tu as un Mac)
+- https://brew.sh/
+
+## Configuration du projet
+```
+which python3
+virtualenv venv -p /path/to/python3
+source venv/bin/activate
+pip install -r requirements.txt
+nbstripout --install
+```
+__Attention, il faut absolument exécuter `nbstripout --install` afin qu'à chaque `git add`,
+les ouputs ds notebooks soient ignorés.__
+
+## Lancer Jupyter
+```
+./run-jupyter.sh
+```
