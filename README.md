@@ -28,11 +28,6 @@ docker pull postgres
 ### Brew (utile si tu as un Mac)
 - https://brew.sh/
 
-### GEOS 
-```
-brew install geos 
-```
-
 ## Configuration du projet
 ```
 which python3
