@@ -6,3 +6,4 @@ venv/
 secrets/
 *.pyc
 *.json
+*.csv
