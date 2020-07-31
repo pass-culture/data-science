@@ -1,4 +1,4 @@
-from passculture_recommendations.data.distribution_of_ratings_by_category import distribution_of_ratings
+from passculture_recommendations.features.distribution_of_ratings_by_category import distribution_of_ratings
 import pandas as pd
 
 def test_should_return_df_with_column_type_total_totalnote0_total_note1_pctgnote0_pctgnote1():

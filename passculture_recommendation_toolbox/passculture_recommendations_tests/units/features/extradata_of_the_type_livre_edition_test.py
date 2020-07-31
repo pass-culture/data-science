@@ -1,4 +1,4 @@
-from passculture_recommendations.data.extradata_of_the_type_livre_edition import get_feature_of_the_book, \
+from passculture_recommendations.features.extradata_of_the_type_livre_edition import get_feature_of_the_book, \
     add_columns_of_the_features_in_df_extradata_livre
 import pandas as pd
 

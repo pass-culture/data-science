@@ -1,6 +1,6 @@
 import pandas as pd
 import numpy as np
-from passculture_recommendations.data.add_support import add_support_in_type
+from passculture_recommendations.features.add_support import add_support_in_type
 
 def test_add_support_in_type():
     # Given
