@@ -5,7 +5,7 @@ from setuptools import find_packages
 
 setup(
     name='passculture_recommendations',
-    version='1.0.70',
+    version='1.0.71',
     packages=find_packages(exclude=["*_tests"]),
     license='MIT license',
     long_description=open('README.md').read(),

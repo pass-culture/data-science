@@ -1,7 +1,7 @@
 from sqlalchemy import create_engine
 engine = create_engine('postgres://pytest:pytest@localhost:5433/pass_culture?sslmode=prefer')
-from passculture_recommendations.data.feature_engineering import get_user_offer_interaction_and_put_a_grade
-from passculture_recommendations.data.feature_engineering import get_a_df_from_sql_query
+from passculture_recommendations.features.feature_engineering import get_user_offer_interaction_and_put_a_grade
+from passculture_recommendations.features.feature_engineering import get_a_df_from_sql_query
 
 import pandas as pd
 
