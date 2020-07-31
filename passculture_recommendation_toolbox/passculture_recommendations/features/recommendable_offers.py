@@ -1,7 +1,7 @@
 from passculture_recommendations.features.feature_engineering import get_a_df_from_sql_query
+import pandas as pd
 
-
-def get_all_the_recommendable_offers():
+def get_all_the_recommendable_offers(connection):
     query = """SELECT * FROM discovery_view"""
     recommendable_offers = get_a_df_from_sql_query(query, connection)
 
@@ -57,7 +57,7 @@ def get_all_the_recommendable_offers():
 
     return recommendable_offers_to_all_the_users
 
-def get_all_the_recommendable_offers_from_bretagne(connection, recommendable_offers_to_all_the_users):
+def get_all_the_recommendable_offers_from_bretagne(recommendable_offers_to_all_the_users):
     bretagne = ['22', '29', '35', '56']
     recommendable_offers_to_all_the_users_in_bretagne = recommendable_offers_to_all_the_users[recommendable_offers_to_all_the_users['offer_pc'].isin(bretagne)]
 
