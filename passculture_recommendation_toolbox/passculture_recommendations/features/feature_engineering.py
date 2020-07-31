@@ -1,8 +1,4 @@
 import pandas as pd
-from sqlalchemy import create_engine
-
-engine = create_engine('postgres://pass_culture:passq@localhost:5434/pass_culture?sslmode=prefer')
-connection = engine.connect()
 
 
 def get_a_df_from_sql_query(query, connection):
@@ -16,7 +12,7 @@ def get_user_offer_interaction_and_put_a_grade(sql_query, grade, connection):
     return interaction_of_the_user
 
 
-def get_dataframe_of_all_the_interactions_from_0_to_5():
+def get_dataframe_of_all_the_interactions_from_0_to_5(connection):
     query_for_offers_reserved_by_the_user = """SELECT booking."userId" as user_id, stock."offerId" as offer_id, type, "isVirtual"
                FROM booking
                LEFT JOIN stock ON booking."stockId" = stock.id
