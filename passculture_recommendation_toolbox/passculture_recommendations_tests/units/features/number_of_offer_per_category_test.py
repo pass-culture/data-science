@@ -1,6 +1,6 @@
 import pandas as pd
 
-from passculture_recommendations.data.number_of_offer_per_category import compute_number_of_offer_per_category
+from passculture_recommendations.features.number_of_offer_per_category import compute_number_of_offer_per_category
 
 
 def test_return_number_of_offer_per_type():
