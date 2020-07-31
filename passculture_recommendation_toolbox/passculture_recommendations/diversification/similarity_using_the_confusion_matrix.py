@@ -8,7 +8,7 @@ def compute_similarity_of_each_type(number_of_offer_per_type: pd.DataFrame, simi
         similarity_between_types = 0
         for type2 in number_of_offer_per_type['type']:
             number_of_type2 = number_of_offer_per_type.loc[number_of_offer_per_type['type']==str(type2), 'total'].values
-            similarity_between_types += number_of_type2 * similarity_matrix.loc[str(type1), str(type2)]
+            similarity_between_types += number_of_type2[0] * similarity_matrix.loc[str(type1), str(type2)]
 
         similarity_between_types -= 1
         number_of_offer_per_type.loc[number_of_offer_per_type['type']==str(type1), 'similarity_between_types'] = similarity_between_types
