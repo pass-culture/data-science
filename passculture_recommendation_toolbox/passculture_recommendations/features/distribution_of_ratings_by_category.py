@@ -1,4 +1,4 @@
-from passculture_recommendations.data.number_of_offer_per_category import compute_number_of_offer_per_category
+from passculture_recommendations.features.number_of_offer_per_category import compute_number_of_offer_per_category
 
 
 def distribution_of_ratings(df_with_user_offer_rate_category, category):
