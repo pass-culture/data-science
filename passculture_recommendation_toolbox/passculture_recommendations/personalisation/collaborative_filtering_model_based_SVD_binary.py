@@ -1,0 +1,14 @@
+from passculture_recommendations.data.feature_engineering import get_dataframe_of_all_the_interactions_from_0_to_5
+from passculture_recommendations.data.feature_engineering import get_offers_that_interest_and_dont_interest_the_users
+from passculture_recommendations.personalisation.svd import svd_for_the_recommendation_training
+from passculture_recommendations.data.recommendable_offers import get_all_the_recommendable_offers
+
+def get_the_recommendation_for_one_user():
+    offers_graded_from_0_to_5 = get_dataframe_of_all_the_interactions_from_0_to_5()
+    offers_graded_from_0_to_1 = get_offers_that_interest_and_dont_interest_the_users(offers_graded_from_0_to_5)
+    algo = svd_for_the_recommendation_training(offers_graded_from_0_to_1)
+    recommendable_offers_to_all_the_users = get_all_the_recommendable_offers()
+    user_id = 25549
+    offers_recommended_to_a_user = get_the_prediction_for_one_user(user_id, recommendable_offers_to_all_the_users, algo)
+
+    return offers_recommended_to_a_user
