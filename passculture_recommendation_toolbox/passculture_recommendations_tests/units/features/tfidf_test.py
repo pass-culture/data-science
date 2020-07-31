@@ -1,6 +1,6 @@
-from passculture_recommendations.data.tfidf import get_cosinus_similarity_using_the_tfidf
-from passculture_recommendations.data.tfidf import get_the_most_similar
-from passculture_recommendations.data.tfidf import get_the_words_that_describe
+from passculture_recommendations.features.tfidf import get_cosinus_similarity_using_the_tfidf
+from passculture_recommendations.features.tfidf import get_the_most_similar
+from passculture_recommendations.features.tfidf import get_the_words_that_describe
 import pandas as pd
 
 

@@ -1,6 +1,6 @@
 import pandas as pd
-from passculture_recommendations.data.functions_over_the_types import create_dataframe_of_the_name_of_all_the_types
-from passculture_recommendations.data.functions_over_the_types import replace_dot_with_a_dash_in_the_column_type
+from passculture_recommendations.features.functions_over_the_types import create_dataframe_of_the_name_of_all_the_types
+from passculture_recommendations.features.functions_over_the_types import replace_dot_with_a_dash_in_the_column_type
 
 def test_create_dataframe_of_all_the_types():
     # Given
