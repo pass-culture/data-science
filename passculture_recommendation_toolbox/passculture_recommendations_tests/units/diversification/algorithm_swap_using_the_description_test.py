@@ -32,14 +32,14 @@ def test_add_x_offers_that_diversifies_the_recommended_offers_using_the_descript
 
     # When
     most_relevant_offers_recommended_to_a_user_with_diversification, number_of_offers_per_type, sum_of_the_score, similarity_of_the_set = add_x_offers_that_diversifies_the_recommended_offers_using_the_description(
-        offers_recommended_to_a_user, cosinus_similarity)
+        3, offers_recommended_to_a_user, cosinus_similarity)
 
     # Then
     df_it_should_return = pd.DataFrame({'user_id': [1, 1, 1],
                                         'offer_id': [1, 2, 6],
-                                        'type': ['ThingType.LIVRE_numerique',
-                                                 'ThingType.MUSIQUE_numerique',
-                                                 'ThingType.INSTRUMENT_numerique'],
+                                        'type': ['ThingType.LIVRE',
+                                                 'ThingType.MUSIQUE',
+                                                 'ThingType.INSTRUMENT'],
                                         'url': [np.nan,
                                                 'abc.com',
                                                 'abcd.com'],
@@ -47,5 +47,5 @@ def test_add_x_offers_that_diversifies_the_recommended_offers_using_the_descript
                                         'index': [0, 1, 5],
                                         'similarite': [0.25, 0.25, 0.40]
                                         })
-
+    print(most_relevant_offers_recommended_to_a_user_with_diversification)
     pd.testing.assert_frame_equal(df_it_should_return, most_relevant_offers_recommended_to_a_user_with_diversification)

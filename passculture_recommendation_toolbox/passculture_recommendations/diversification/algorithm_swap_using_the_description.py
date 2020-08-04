@@ -11,14 +11,10 @@ from passculture_recommendations.diversification.exchange_and_drop_an_offer impo
 from passculture_recommendations.features.number_of_offer_per_category import compute_number_of_offer_per_category
 
 
-def add_x_offers_that_diversifies_the_recommended_offers_using_the_description(offers_recommended_to_a_user,
+def add_x_offers_that_diversifies_the_recommended_offers_using_the_description(K, offers_recommended_to_a_user,
                                                                                cosinus_similarity):
-    K = int(len(offers_recommended_to_a_user) / 2)
     N = len(offers_recommended_to_a_user)
 
-    print(1)
-    offers_recommended_to_a_user = add_support_in_type(offers_recommended_to_a_user)
-    print(offers_recommended_to_a_user)
     offers_recommended_to_a_user['index'] = offers_recommended_to_a_user.index
     most_relevant_offers_recommended_to_a_user = offers_recommended_to_a_user[0:K]
     least_relevant_offers_recommended_to_a_user = offers_recommended_to_a_user[K + 1:N]
