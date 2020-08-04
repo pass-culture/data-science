@@ -27,7 +27,7 @@ def make_bar_chart(dataset, categrical_col, start_year, end_year, title, frame_r
 
     listOfFrames = []
     for i in range(int(start_year), int(end_year) + 1, frame_rate):
-        d = data.loc[:, str(i)]
+        d = dataset.loc[:, str(i)]
         pdata = get_top_10(d)
         listOfFrames.append(go.Frame(data=[go.Bar(x=pdata["names"], y=pdata["pop"],
                                                   marker_color=pdata["color"], text=pdata["names"],
