@@ -29,12 +29,11 @@ class QueryInitialResponses:
         Typeform responses are stored in pages of {nb_items_per_page} items each (except possibly the last one).
         Query the page of index {page_index} of these typeform responses.
         Args:
-            nb_items_per_page: number of items in each page
-            page_index: index of the page queried
+            nb_items_per_page (int): number of items in each page
+            page_index (int): index of the page queried
 
         Returns:
-
-
+            requests.models.Response: a requests response.
         """
         res = requests.get(
             f"https://api.typeform.com/forms/{self.form_dict[self.env]}/responses?page_size={nb_items_per_page}&page={page_index}",
@@ -52,7 +51,7 @@ class QueryInitialResponses:
             nb_items_per_page (int): the number of items per page chosen to query typeform responses.
             last_page (int): last page to query (if None, query all pages).
         Returns:
-
+            List[dict]: the list of responses.
         """
         data = self.query_page(nb_items_per_page, 1)
         total_pages = data.json()['page_count']
