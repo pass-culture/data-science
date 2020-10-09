@@ -10,8 +10,7 @@ import mysql.connector
 
 
 class Matomo:
-    def __init__(self, identity_file: str = "id_rsa", is_prod: bool = False):
-        self.ssh_conn_id = "ssh_connection"
+    def __init__(self, identity_file: str = "~/id_rsa", is_prod: bool = False):
         self.identity_file = identity_file
         self.tunnel = None
         self.mydb = None
@@ -59,12 +58,12 @@ class Matomo:
             database=self.matomo_infos["dbname"],
         )
 
-    def run(self, sql_cmd: str):
+    def run_query(self, query: str):
         if not self.mydb:
             self.connect()
 
         cursor = self.mydb.cursor()
-        cursor.execute(sql_cmd)
+        cursor.execute(query)
         return cursor
 
     def kill_tunnel(self):
