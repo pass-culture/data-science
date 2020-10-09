@@ -3,7 +3,6 @@
 import logging
 import os
 import shlex
-import stat
 import subprocess
 import json
 import mysql.connector
