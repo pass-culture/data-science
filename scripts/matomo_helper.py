@@ -10,7 +10,7 @@ import mysql.connector
 
 
 class Matomo:
-    def __init__(self, key:str, identity_file="key_file.pem" :str, is_prod=False : bool):
+    def __init__(self, identity_file="id_rsa" :str, is_prod=False : bool):
         self.ssh_conn_id = "ssh_connection"
         self.identity_file = identity_file
         self.tunnel = None
@@ -20,27 +20,17 @@ class Matomo:
             self.matomo_infos = json.loads(os.environ.get("MATOMO_PROD"))
         else:
             self.matomo_infos = json.loads(os.environ.get("MATOMO_STAGING"))
-        self.connect(key)
+        self.connect()
 
-    def connect(self, key:str):
+    def connect(self):
         """
         Creates a tunnel between two hosts. Like ssh -L <LOCAL_PORT>:host:<REMOTE_PORT>.
         Hard coded in for now. Down the line, it will pull from connections panel.
-
         """
+
         local_port = 10000
         database_host = self.matomo_infos["host"]
         database_port = self.matomo_infos["port"]
-
-        # Write the key to a file to change permissions
-        # The container dies after the task executes, so don't have to
-        # worry about closing/deleting it.
-        with open(self.identity_file, "w") as key_file:
-            key_file.write(key)
-
-        os.chmod(self.identity_file, stat.S_IRWXU)
-
-        # Based on https://doc.scalingo.com/platform/databases/access#encrypted-tunnel
 
         ssh_tunnel_command = """ssh -L {local_port}:{database_host}:{database_port} -i {identity_file} git@{ssh_hostname} -N""".format(
             local_port=local_port,
@@ -56,7 +46,6 @@ class Matomo:
             )
         )
 
-        # Running ssh command
         args = shlex.split(ssh_tunnel_command)
         print("Creating tunnel")
         self.tunnel = subprocess.Popen(args)
