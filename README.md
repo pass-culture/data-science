@@ -1,6 +1,6 @@
 # DATA SCIENCE
 
-## Conection aux sources de données
+## Connection aux sources de données
 
 ### Matomo
 
