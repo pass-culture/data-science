@@ -7,3 +7,4 @@ secrets/
 *.pyc
 *.json
 *.csv
+.env.local
