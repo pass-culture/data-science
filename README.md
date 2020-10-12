@@ -1,3 +1,12 @@
+# DATA SCIENCE
+
+## Connection aux sources de données
+
+### Matomo
+
+1. Importez votre clé SSH dans votre environnement jupyter à la racine (nom par défaut : id_rsa)
+
+2. Copiez / Collez le fichier `scripts/know_hosts` dans le dossier `.ssh` de votre session
 
 # Installer les dépendances et lancer les tests des scripts
 
@@ -16,7 +25,7 @@ python3 -m venv venv
 source venv/bin/activate
 ```
 
-- Installer les dépendances 
+- Installer les dépendances
 
 ```
 pip install -r requirements.txt
@@ -42,6 +51,7 @@ cp .env.dist .env.local
 ```
  set +a; source .env.local; set -a;
 ```
+
 - ajouter la python local path :
 
 ```
