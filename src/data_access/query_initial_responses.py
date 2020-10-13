@@ -25,21 +25,20 @@ class QueryInitialResponses:
             }
         self.api_key = api_key
 
-    def query_page(self, nb_items_per_page=1000, until=None):
+    def query_page(self, nb_items_per_page=1000, before=None):
         """
         Typeform responses are stored in pages of {nb_items_per_page} items each (except possibly the last one).
         Query a page of responses, possibly submitted until a specified time.
         Args:
             nb_items_per_page (int): number of items in each page
-            until (string): limit request to responses submitted until the specified date and time.
-                In ISO 8601 format, UTC time, to the second, with T as a delimiter between the date and time.
+            before (string): limit request to responses submitted before a request token.
 
         Returns:
             requests.models.Response: a requests response.
         """
         request_url = f"https://api.typeform.com/forms/{self.form_dict[self.env]}/responses?page_size={nb_items_per_page}"
-        if until is not None:
-            request_url += f"&until={until}"
+        if before is not None:
+            request_url += f"&before={before}"
 
         result = requests.get(
             request_url,
@@ -64,10 +63,10 @@ class QueryInitialResponses:
 
         progress_bar = tqdm.tqdm(total=data['page_count'])
 
-        while nb_items > 1:
+        while nb_items > 0:
             new_items = self.query_page(
                     nb_items_per_page=nb_items_per_page,
-                    until=items[-1].get('submitted_at')
+                    before=items[-1].get('token')
                 ).json()['items']
             items.extend(new_items)
 
