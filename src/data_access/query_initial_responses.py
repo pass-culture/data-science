@@ -21,7 +21,7 @@ class QueryInitialResponses:
             self.form_dict = {
                 "prod": os.getenv("PROD_FORM_ID"),
                 "testing": os.getenv("TESTING_FORM_ID"),
-                "staging": os.getenv("STAGING_FORM_ID")
+                "staging": os.getenv("STAGING_FORM_ID"),
             }
         self.api_key = api_key
 
@@ -41,12 +41,12 @@ class QueryInitialResponses:
             request_url += f"&before={before}"
 
         result = requests.get(
-            request_url,
-            headers={"Authorization": f"Bearer {self.api_key}"}
+            request_url, headers={"Authorization": f"Bearer {self.api_key}"}
         )
         if result.status_code != 200:
             raise ApiQueryError(
-                f"Error {result.status_code} when querying typeform API on {self.form_dict[self.env]} form.")
+                f"Error {result.status_code} when querying typeform API on {self.form_dict[self.env]} form."
+            )
         return result
 
     def query_all(self, nb_items_per_page=1000):
@@ -58,16 +58,15 @@ class QueryInitialResponses:
             List[dict]: the list of responses.
         """
         data = self.query_page(nb_items_per_page=nb_items_per_page).json()
-        items = data['items']
+        items = data["items"]
         nb_items = len(items)
 
-        progress_bar = tqdm.tqdm(total=data['page_count'])
+        progress_bar = tqdm.tqdm(total=data["page_count"])
 
         while nb_items > 0:
             new_items = self.query_page(
-                    nb_items_per_page=nb_items_per_page,
-                    before=items[-1].get('token')
-                ).json()['items']
+                nb_items_per_page=nb_items_per_page, before=items[-1].get("token")
+            ).json()["items"]
             items.extend(new_items)
 
             nb_items = len(new_items)
