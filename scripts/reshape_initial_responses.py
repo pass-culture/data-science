@@ -61,7 +61,7 @@ dataframe = (
             if row["answer"]
             else None,
             axis=1,
-        )
+        ),
     )
     .merge(fields, on="question_id", how="inner")
     .drop(
