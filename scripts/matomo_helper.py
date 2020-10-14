@@ -13,6 +13,7 @@ class Matomo:
         self.tunnel = None
         self.mydb = None
         self.is_prod = is_prod
+        self.cursor = None
         if self.is_prod:
             self.matomo_infos = json.loads(os.environ.get("MATOMO_PROD"))
         else:
@@ -47,26 +48,26 @@ class Matomo:
         print("Creating tunnel")
         self.tunnel = subprocess.Popen(args)
 
-        print("Connecting to the MySQL database")        
+        print("Connecting to the MySQL database")
         self.mydb = mysql.connector.connect(
-                host="localhost",
-                user=self.matomo_infos["user"],
-                password=self.matomo_infos["password"],
-                port=local_port,
-                database=self.matomo_infos["dbname"],
-            )
-        self.cursor = self.mydb.cursor()
+            host="localhost",
+            user=self.matomo_infos["user"],
+            password=self.matomo_infos["password"],
+            port=local_port,
+            database=self.matomo_infos["dbname"],
+        )
         print("connected")
 
     def run_query(self, query: str):
         if not self.mydb:
             self.connect()
-        self.cursor.close()
+        if self.cursor:
+            self.cursor.close()
         self.cursor = self.mydb.cursor(buffered=True)
         self.cursor.execute(query)
         return self.cursor
     
-    def print_query(self, query: str):
+    def print_response(self, query: str):
         for x in self.run_query(query=query):
             print(x)
 
