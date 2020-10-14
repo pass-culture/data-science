@@ -47,22 +47,28 @@ class Matomo:
         print("Creating tunnel")
         self.tunnel = subprocess.Popen(args)
 
-        print("Connecting to the MySQL database")
+        print("Connecting to the MySQL database")        
         self.mydb = mysql.connector.connect(
-            host="localhost",
-            user=self.matomo_infos["user"],
-            password=self.matomo_infos["password"],
-            port=local_port,
-            database=self.matomo_infos["dbname"],
-        )
+                host="localhost",
+                user=self.matomo_infos["user"],
+                password=self.matomo_infos["password"],
+                port=local_port,
+                database=self.matomo_infos["dbname"],
+            )
+        self.cursor = self.mydb.cursor()
+        print("connected")
 
     def run_query(self, query: str):
         if not self.mydb:
             self.connect()
-
-        cursor = self.mydb.cursor()
-        cursor.execute(query)
-        return cursor
+        self.cursor.close()
+        self.cursor = self.mydb.cursor(buffered=True)
+        self.cursor.execute(query)
+        return self.cursor
+    
+    def print_query(self, query: str):
+        for x in self.run_query(query=query):
+            print(x)
 
     def kill_tunnel(self):
         if not self.tunnel:
