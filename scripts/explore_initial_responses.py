@@ -27,8 +27,10 @@ fields = (
 with open("data/api_responses_new_form.json") as json_file:
     responses = json.load(json_file)
 
+authentified_responses = len([response.get('metadata').get('referer') for response in responses if 'userId=' in response.get('metadata').get('referer')])
 # number of users (list of answers for each user)
 print(f"User having answered: {len(responses)}")
+print(f"Authentified users having answered: {authentified_responses}")
 
 
 # we want one line for each user answer
