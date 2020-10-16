@@ -20,10 +20,10 @@ if type(CONNECTION) == str:
 else:
     CONNECTION = json.loads(CONNECTION)
 
-product_database_connection = DatabaseConnection(
+database_connection = DatabaseConnection(
     private_key_path="~/id_rsa", **SSH
 )
-dataframe = product_database_connection.query_database(query=f'SELECT * FROM user;', **CONNECTION)
+dataframe = database_connection.query_database(query=f'SELECT * FROM user;', **CONNECTION)
 
 profile = ProfileReport(dataframe, title="Table matomo.user")
-profile.to_file(f"data/table_reports/matomo_user.html")
+profile.to_file(f"data/table_reports/matomo/user.html")

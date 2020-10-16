@@ -1,4 +1,3 @@
-import os
 import requests
 
 import tqdm
@@ -13,17 +12,9 @@ class QueryInitialResponses:
     Access the initial cultural habits of customers.
     """
 
-    def __init__(self, env, api_key, form_dict=None):
-        self.env = env
-        if form_dict is not None:
-            self.form_dict = form_dict
-        else:
-            self.form_dict = {
-                "prod": os.getenv("PROD_FORM_ID"),
-                "testing": os.getenv("TESTING_FORM_ID"),
-                "staging": os.getenv("STAGING_FORM_ID"),
-            }
+    def __init__(self, api_key, form_id):
         self.api_key = api_key
+        self.form_id = form_id
 
     def query_page(self, nb_items_per_page=1000, before=None):
         """
@@ -36,7 +27,7 @@ class QueryInitialResponses:
         Returns:
             requests.models.Response: a requests response.
         """
-        request_url = f"https://api.typeform.com/forms/{self.form_dict[self.env]}/responses?page_size={nb_items_per_page}"
+        request_url = f"https://api.typeform.com/forms/{self.form_id}/responses?page_size={nb_items_per_page}"
         if before is not None:
             request_url += f"&before={before}"
 
@@ -45,7 +36,7 @@ class QueryInitialResponses:
         )
         if result.status_code != 200:
             raise ApiQueryError(
-                f"Error {result.status_code} when querying typeform API on {self.form_dict[self.env]} form."
+                f"Error {result.status_code} when querying typeform API on {self.form_id} form."
             )
         return result
 

@@ -20,10 +20,30 @@ if type(CONNECTION) == str:
 else:
     CONNECTION = json.loads(CONNECTION)
 
-product_database_connection = DatabaseConnection(
+database_connection = DatabaseConnection(
     private_key_path="~/id_rsa", **SSH
 )
-dataframe = product_database_connection.query_database(query=f'SELECT * FROM "user";', **CONNECTION)
 
-profile = ProfileReport(dataframe, title="Table product.user")
-profile.to_file(f"data/table_reports/product_user.html")
+for table_index, table in enumerate([
+    "user",
+    "offer",
+    "product",
+    "stock",
+    "seen_offer",
+    "venue",
+    "venue_provider",
+    "recommendation",
+    "booking",
+    "provider",
+    "offerer"
+    "seen_offer"
+]):
+    print(table)
+    dataframe = database_connection.query_database(query=f'SELECT count(*) FROM "{table}";', **CONNECTION)
+    nb_rows = dataframe['count'].values[0]
+    if nb_rows < 300000:
+        dataframe = database_connection.query_database(query=f'SELECT * FROM "{table}";', **CONNECTION)
+        profile = ProfileReport(dataframe, title=f"{table_index + 1}. Table product.{table}")
+        profile.to_file(f"data/table_reports/product/{table_index + 1}_{table}.html")
+    else:
+        print(nb_rows)
