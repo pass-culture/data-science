@@ -1,5 +1,8 @@
 # DATA SCIENCE
 
+
+Ce repository sert à stocker les notebooks et scripts orientés data-science. Donc tout ce qui est exploration des données et entrainement d'algorithmes.
+
 ## Connection aux sources de données
 
 ### Matomo
